@@ -73,7 +73,7 @@ module.exports = {
       file.tags.should.be.empty;
       // the following doesn't work as gh-md now obfuscates emails different on every pass
       //file.description.full.should.equal('<p>Dox<br />Copyright (c) 2010 TJ Holowaychuk <a href=\'mailto:tj@vision-media.ca\'>tj@vision-media.ca</a><br />MIT Licensed</p>');
-      file.description.full.should.be.a('string');
+      file.description.full.should.be.a.String;
       file.ignore.should.be.true;
 
       var mods = comments.shift();
@@ -145,8 +145,7 @@ module.exports = {
     fixture('prototypes.js', function(err, str){
       var comments = dox.parseComments(str)
 
-      comments.should.be.an.instanceOf(Array);
-      comments.should.have.lengthOf(3);
+      comments.should.be.an.Array.with.lengthOf(3);
 
       // constructor
       comments[0].description.full.should.equal('<p>Does a lot of foo</p>');

@@ -9,13 +9,9 @@ test:
 		$(TESTS)
 
 docs:
-	@./bin/dox \
-	  --verbose \
-	  lib/* \
-	  --out docs \
-	  --title Dox \
-	  --github visionmedia/dox \
-	  --index index.md
+	@mkdir -p docs; \
+	./bin/dox --api < lib/dox.js > \
+	docs/index.md
 
 doc-server:
 	@./bin/dox \
