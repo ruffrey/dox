@@ -55,7 +55,7 @@ module.exports = function(grunt) {
       
     // }
 
-    exec(jsdoxy + ' ' + _args.join(" "), {maxBuffer: 5000*1024}, function(error, stout, sterr){
+    exec(jsdoxy + ' < ' + dir.split(',').join(' ') + " > " + dest + ".json", {maxBuffer: 5000*1024}, function(error, stout, sterr){
       if (error) { grunt.log.error("jsdoxy ERROR:  "+ error + "\n" + error.stack); }
       if (!error) {
         grunt.log.ok('Directory "' + dir + '" doxxed by jsdoxy.');
