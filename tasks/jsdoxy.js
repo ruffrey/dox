@@ -22,7 +22,12 @@ module.exports = function(grunt) {
         done = this.async(),
         doxPath = path.resolve(__dirname,'../'),
         _opts = this.options(),
-        _args = [];
+        _args = [],
+        outputFile = dest + "output.json";
+
+    if(!fs.existsSync(dest)) {
+      fs.mkdirSync(dest);
+    }
 
     // Absolute path to jsdoxy
     var jsdoxy = [doxPath, 'bin', 'jsdoxy'].join(path.sep);
@@ -55,7 +60,7 @@ module.exports = function(grunt) {
       
     // }
 
-    exec(jsdoxy + ' < ' + dir.join(' ') + " > " + dest + "output.json", {maxBuffer: 5000*1024}, function(error, stout, sterr){
+    exec(jsdoxy + ' < ' + dir.join(' ') + " > " + outputFile, {maxBuffer: 5000*1024}, function(error, stout, sterr){
       if (error) { grunt.log.error("jsdoxy ERROR:  "+ error + "\n" + error.stack); }
       if (!error) {
         grunt.log.ok('Directory "' + dir + '" doxxed by jsdoxy.');
