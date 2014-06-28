@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         _args = [];
 
     // Absolute path to jsdoxy
-    var jsdoxy = [doxPath, 'node_modules', '.bin', 'dox-foundation'].join(path.sep);
+    var jsdoxy = [doxPath, 'bin', 'jsdoxy'].join(path.sep);
 
     // Cleanup any existing docs
     rimraf.sync(dest);
