@@ -1,2 +1,2 @@
 
-module.exports = require('./lib/dox');
+module.exports = require('./lib/jsdoxy');

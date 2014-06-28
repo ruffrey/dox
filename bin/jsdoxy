@@ -7,7 +7,7 @@
 var program = require('commander')
   , pkg = require('../package')
   , util = require('util')
-  , dox = require('..');
+  , jsdoxy = require('..');
 
 // options
 
@@ -23,10 +23,10 @@ program.on('--help', function(){
   console.log('  Examples:');
   console.log('');
   console.log('    # stdin');
-  console.log('    $ dox > myfile.json');
+  console.log('    $ jsdoxy > myfile.json');
   console.log('');
   console.log('    # operates over stdio');
-  console.log('    $ dox < myfile.js > myfile.json');
+  console.log('    $ jsdoxy < myfile.js > myfile.json');
   console.log('');
 });
 
@@ -40,11 +40,11 @@ var buf = '';
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', function(chunk){ buf += chunk; });
 process.stdin.on('end', function(){
-  var obj = dox.parseComments(buf, { raw: program.raw || program.api });
+  var obj = jsdoxy.parseComments(buf, { raw: program.raw || program.api });
   if (program.debug) {
     process.stdout.write(util.inspect(obj, false, Infinity, true) + '\n');
   } else if (program.api) {
-    process.stdout.write(dox.api(obj));
+    process.stdout.write(jsdoxy.api(obj));
   } else {
     process.stdout.write(JSON.stringify(obj, null, 2));
   }
