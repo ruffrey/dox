@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         doxPath = path.resolve(__dirname,'../'),
         _opts = this.options(),
         _args = [],
-        outputFile = dest + "output.json";
+        outputFile = path.resolve(dest, "output.json");
 
     if(!fs.existsSync(dest)) {
       fs.mkdirSync(dest);
@@ -38,10 +38,10 @@ module.exports = function(grunt) {
     // Cleanup any existing docs
     rimraf.sync(dest);
 
-    _args.push('<');
-    _args.push(dir);
-    _args.push('>');
-    _args.push(dest);
+    // _args.push('<');
+    // _args.push(dir);
+    // _args.push('>');
+    // _args.push(dest);
 
     // Set options to arguments
     // if(_opts.title){
@@ -49,9 +49,11 @@ module.exports = function(grunt) {
     //   _args.push('"' + _opts.title + '"');
     // }
 
-    if (_opts.template) {
-      _args.push('--template');
-      _args.push('"' + _opts.template + '"');
+    if (!_opts.template) {
+      grunt.log.error("jsdoxy ERROR: missing jade `template` option");
+      return;
+      // _args.push('--template');
+      // _args.push('"' + _opts.template + '"');
     }
 
     // Pass through ignore params if set
