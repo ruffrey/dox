@@ -28,6 +28,9 @@ module.exports = function(grunt) {
     if(!fs.existsSync(dest)) {
       fs.mkdirSync(dest);
     }
+    if(!fs.existsSync(outputFile)) {
+      fs.writeFileSync(outputFile, "");
+    }
 
     // Absolute path to jsdoxy
     var jsdoxy = [doxPath, 'bin', 'jsdoxy'].join(path.sep);
