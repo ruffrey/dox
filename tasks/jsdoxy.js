@@ -30,9 +30,9 @@ module.exports = function(grunt) {
     // Cleanup any existing docs
     rimraf.sync(dest);
 
-    // _args.push('--source');
+    _args.push('<');
     _args.push(dir);
-    // _args.push('--target');
+    _args.push('>');
     _args.push(dest);
 
     // Set options to arguments
