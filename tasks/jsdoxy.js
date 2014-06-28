@@ -26,9 +26,11 @@ module.exports = function(grunt) {
         outputFile = path.resolve(dest, "output.json");
 
     if(!fs.existsSync(dest)) {
+      grunt.log.write('making ' + dest);
       fs.mkdirSync(dest);
     }
     if(!fs.existsSync(outputFile)) {
+      grunt.log.write('making ' + outputFile);
       fs.writeFileSync(outputFile, "");
     }
 
