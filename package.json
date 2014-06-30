@@ -11,7 +11,8 @@
     "documentation",
     "docs",
     "markdown",
-    "jsdoc"
+    "jsdoc",
+    "gruntplugin"
   ],
   "bin": {
     "jsdoxy": "./bin/jsdoxy"

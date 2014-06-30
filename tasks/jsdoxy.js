@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         doxPath = path.resolve(__dirname,'../'),
         _opts = this.options(),
         _args = [],
-        outputFile = "jsdoxy-output.json";
+        outputFile = _opts.jsonOutput || "jsdoxy-output.json";
 
     // if(!fs.existsSync(outputFile)) {
     //   grunt.log.writeln('jsdoxy: making file ' + outputFile);
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
           });
         });
 
-        grunt.file.write('obj-'+outputFile, JSON.stringify(organizedByClass, null, 4));
+        grunt.file.write(outputFile, JSON.stringify(organizedByClass, null, 4));
 
         // var html = jade.renderFile('filename.jade', merge(options, locals));
 
