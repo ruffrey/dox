@@ -99,7 +99,7 @@ module.exports = function(grunt) {
           {
             if(comment.isPrivate && !_opts.outputPrivate)
             {
-              grunt.log.writeln(JSON.stringify(comment));
+              // do not include the private comments unless specified
             }
             else{
               lastClassnameWas = tag.string;
