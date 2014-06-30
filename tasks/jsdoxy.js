@@ -104,6 +104,7 @@ module.exports = function(grunt) {
             else{
               lastClassnameWas = tag.string;
               organizedByClass[lastClassnameWas] = [];
+              comment.ctx.name = lastClassnameWas;
             }
           }
 

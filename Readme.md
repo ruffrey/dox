@@ -67,7 +67,7 @@ then inside `Gruntfile.js` at the project root
 		jsdoxy: {
             options: {
             	jsonOutput: 'jsdoxy-output.json', // default, not optional
-            	outputPrivate: false, // default indicating whether to output private comments
+            	outputPrivate: false, // default indicating whether to output private **classes**
                 template: 'your-template.jade' // optional, to allow generation of html
             },
             files: {
