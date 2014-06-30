@@ -26,11 +26,6 @@ module.exports = function(grunt) {
         _args = [],
         outputFile = _opts.jsonOutput || "jsdoxy-output.json";
 
-    // if(!fs.existsSync(outputFile)) {
-    //   grunt.log.writeln('jsdoxy: making file ' + outputFile);
-    //   grunt.file.write(outputFile, " ");
-    // }
-
     // Absolute path to jsdoxy
     var jsdoxy = [doxPath, 'bin', 'jsdoxy'].join(path.sep);
 
@@ -43,10 +38,15 @@ module.exports = function(grunt) {
     dir.forEach(function(file) {
       executeFiles.push(function(cb){
 
-        var filepath = path.join(dest, file + ".json");
-        grunt.file.write(filepath, " ");
+        var outputFilepath = path.join(dest, file + ".json");
+
+        // the exec'd process seems to not have proper permissions to write, 
+        // unless the file exists already
+        grunt.file.write(outputFilepath, " ");
+
+        // capture the outputted file
         exec(
-          jsdoxy + ' < ' + file + " > " + filepath, 
+          jsdoxy + ' < ' + file + " > " + outputFilepath, 
           {maxBuffer: 5000*1024}, 
           function(error, stout, sterr) {
             if (error) { 
@@ -54,8 +54,23 @@ module.exports = function(grunt) {
               cb(err); 
             }
             if (!error) {
-              grunt.log.ok( file + '" got doxxed, son.');
-              output = output.concat( grunt.file.readJSON(filepath) );
+              grunt.log.ok( file + '" got doxxed, yo!');
+
+              var fileJson = grunt.file.readJSON(outputFilepath);
+
+              fileJson.forEach(function(comment) {
+                if(!comment.ctx) comment.ctx = {};
+
+                comment.ctx.file = {
+                  input: file,
+                  output: outputFilepath
+                };
+              });
+
+              // then rewrite it with the most recent details
+              grunt.file.write(outputFilepath, JSON.stringify(fileJson, null, 4));
+
+              output = output.concat( fileJson );
               cb();
             }
         });
@@ -65,27 +80,64 @@ module.exports = function(grunt) {
     async.series(executeFiles, function(err) {
       if(err) return;
 
-      if(!_opts.template) return done();
           
-        grunt.log.writeln('Jadifying the output using template ' + _opts.template);
+      var organizedByClass = {};
+      var lastClassnameWas = "";
 
-        var organizedByClass = {};
 
-        output.forEach(function(comment) {
-          comment.tags.forEach(function(tag) {
-            if(tag.type == "class")
-            {
-              organizedByClass[tag.string] = comment;
-              return false;
-            }
-          });
+      // comments.forEach, really
+      output.forEach(function(comment) {
+      
+      // 
+      // Important:
+      // the `@class SomeClass` comment should always be in the first comment.
+      // 
+
+        comment.tags.forEach(function(tag) {
+
+          if(tag.type == "class")
+          {
+            lastClassnameWas = tag.string;
+            organizedByClass[lastClassnameWas] = [];
+          }
+
         });
 
-        grunt.file.write(outputFile, JSON.stringify(organizedByClass, null, 4));
+        if(!lastClassnameWas) return;
 
-        // var html = jade.renderFile('filename.jade', merge(options, locals));
+        organizedByClass[lastClassnameWas].push(comment);
 
-        done();
+
+      });
+
+      grunt.file.write(outputFile, JSON.stringify(organizedByClass, null, 4));
+      grunt.log.ok(
+        "Organized docs into " 
+        + Object.keys(organizedByClass).length 
+        + " classes and wrote to " + outputFile
+      );
+
+      if(!_opts.template) return done();
+
+      grunt.log.ok('Jadifying the output using ' + _opts.template);
+
+      Object.keys(organizedByClass).forEach(function(classKey) {
+        var thisClassDocs = organizedByClass[classKey];
+
+        var jadeLocals = {
+          structure:  organizedByClass,
+          comments:   thisClassDocs,
+          className:  classKey
+        };
+
+        var html = jade.renderFile(_opts.template, jadeLocals );
+
+        grunt.file.write(path.join(dest, jadeLocals.className + ".html"), html);
+
+      });
+
+
+      done();
     });
       
 

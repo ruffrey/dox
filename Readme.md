@@ -48,7 +48,7 @@ Install the package to your project with NPM
 
 	npm install jsdoxy --save
 
-then in your source code
+then in your source code, the `@class` tag should **always** be part of the first comment
 	
 	/**
 	 * A class that does something.
@@ -104,10 +104,25 @@ yields `jsdoxy-output.json`
 	        "ctx": {
 	            "type": "declaration",
 	            "name": "MyClass",
-	            "string": "idk what goes here"
+	            "string": "idk what goes here",
+	            "file": {
+	            	"input": "somefilepath.js",
+	            	"output": "someotherfilepath.js"
+	            }
 	        }
 	    }
 	}
+
+### your Jade template
+
+The jade template will receive the following locals
+
+	var jadeLocals = {
+      structure:  organizedByClass,
+      comments:   thisClassDocs,
+      className:  classKey
+    };
+
 
 # License
 
