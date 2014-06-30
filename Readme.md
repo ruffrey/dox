@@ -5,6 +5,8 @@ A [jsdoc-ish](http://usejsdoc.org) documentation generator forked from [visionme
 ### Differences from visionmedia/dox
 
 * Allows multiline tag comments.
+* Handles a few more tags.
+* Dumped the deprecated [github-flavored-markdown](https://github.com/isaacs/github-flavored-markdown) for [marked](https://github.com/chjj/marked).
 * Includes a **grunt plugin** `jsdoxy`. 
 	* Comments are organized into a plain object with the `@class MyClass` tag as the key.
 	* Optionally renders the JSON output using [Jade](http://jade-lang.com).
