@@ -97,8 +97,14 @@ module.exports = function(grunt) {
 
           if(tag.type == "class")
           {
-            lastClassnameWas = tag.string;
-            organizedByClass[lastClassnameWas] = [];
+            if(comment.isPrivate && !_opts.outputPrivate)
+            {
+              grunt.log.writeln(JSON.stringify(comment));
+            }
+            else{
+              lastClassnameWas = tag.string;
+              organizedByClass[lastClassnameWas] = [];
+            }
           }
 
         });

@@ -1,7 +1,7 @@
 {
   "name": "jsdoxy",
-  "description": "Markdown / JSdoc documentation generator",
-  "version": "0.5.0",
+  "description": "JSdoc documentation generator",
+  "version": "0.5.1",
   "author": "Jeff Parrish",
   "repository": {
     "type": "git",
@@ -12,6 +12,7 @@
     "docs",
     "markdown",
     "jsdoc",
+    "jade",
     "gruntplugin"
   ],
   "bin": {

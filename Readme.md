@@ -67,7 +67,8 @@ then inside `Gruntfile.js` at the project root
 		jsdoxy: {
             options: {
             	jsonOutput: 'jsdoxy-output.json', // default, not optional
-                template: 'your-template.jade' // optional
+            	outputPrivate: false, // default indicating whether to output private comments
+                template: 'your-template.jade' // optional, to allow generation of html
             },
             files: {
                 src: [ . . . ],
@@ -106,8 +107,8 @@ yields `jsdoxy-output.json`
 	            "name": "MyClass",
 	            "string": "idk what goes here",
 	            "file": {
-	            	"input": "somefilepath.js",
-	            	"output": "someotherfilepath.js"
+	            	"input": "./input/file/path/file.js",
+	            	"output": "./output/file/path/file.js.json"
 	            }
 	        }
 	    }
