@@ -131,10 +131,22 @@ module.exports = function(grunt) {
       Object.keys(organizedByClass).forEach(function(classKey) {
         var thisClassDocs = organizedByClass[classKey];
 
+        var classCommentLink;
+
+        thisClassDocs.forEach(function(comment){
+          comment.tags.forEach(function(tag){
+            if(tag.type === "link") classCommentLink = tag.string;
+
+            if(classCommentLink) return false;
+          });
+          if(classCommentLink) return false;
+        });
+
         var jadeLocals = {
           structure:  organizedByClass,
           comments:   thisClassDocs,
-          className:  classKey
+          className:  classKey,
+          link: classCommentLink
         };
 
         var html = jade.renderFile(_opts.template, jadeLocals );

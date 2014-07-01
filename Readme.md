@@ -124,7 +124,8 @@ The jade template will receive the following locals
 	var jadeLocals = {
       structure:  organizedByClass,
       comments:   thisClassDocs,
-      className:  classKey
+      className:  classKey,
+      link: classCommentLink
     };
 
 
