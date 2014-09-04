@@ -5,6 +5,7 @@ A [jsdoc-ish](http://usejsdoc.org) documentation generator forked from [visionme
 ### Differences from visionmedia/dox
 
 * Allows multiline tag comments.
+* Supports code context on string key properties like `someobject['asdf']`.
 * Handles a few more tags.
 * Code context for `@event`.
 * Dumped the deprecated [github-flavored-markdown](https://github.com/isaacs/github-flavored-markdown) for [marked](https://github.com/chjj/marked).
