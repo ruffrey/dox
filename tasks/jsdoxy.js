@@ -1,8 +1,8 @@
 /*
  * # grunt-jsdoxy
- * 
+ *
  * forked from Matt McManus grunt-dox https://github.com/punkave/grunt-dox
- * 
+ *
  * Licensed under the MIT license.
  */
 
@@ -40,18 +40,18 @@ module.exports = function(grunt) {
 
         var outputFilepath = path.join(dest, file + ".json");
 
-        // the exec'd process seems to not have proper permissions to write, 
+        // the exec'd process seems to not have proper permissions to write,
         // unless the file exists already
         grunt.file.write(outputFilepath, " ");
 
         // capture the outputted file
         exec(
-          jsdoxy + ' < ' + file + " > " + outputFilepath, 
-          {maxBuffer: 5000*1024}, 
+          jsdoxy + ' < ' + file + " > " + outputFilepath,
+          {maxBuffer: 5000*1024},
           function(error, stout, sterr) {
-            if (error) { 
+            if (error) {
               grunt.log.error("jsdoxy ERROR:  "+ error + "\n" + error.stack);
-              cb(err); 
+              cb(err);
             }
             if (!error) {
               grunt.log.ok( file + '" got doxxed, yo!');
@@ -80,18 +80,18 @@ module.exports = function(grunt) {
     async.series(executeFiles, function(err) {
       if(err) return;
 
-          
+
       var organizedByClass = {};
       var lastClassnameWas = "";
 
 
       // comments.forEach, really
       output.forEach(function(comment) {
-      
-      // 
+
+      //
       // Important:
       // the `@class SomeClass` comment should always be in the first comment.
-      // 
+      //
 
         comment.tags.forEach(function(tag) {
 
@@ -114,19 +114,22 @@ module.exports = function(grunt) {
 
         organizedByClass[lastClassnameWas].push(comment);
 
-
       });
 
       grunt.file.write(outputFile, JSON.stringify(organizedByClass, null, 4));
       grunt.log.ok(
-        "Organized docs into " 
-        + Object.keys(organizedByClass).length 
+        "Organized docs into "
+        + Object.keys(organizedByClass).length
         + " classes and wrote to " + outputFile
       );
 
-      if(!_opts.template) return done();
+      if (_opts.template === false) return done();
 
-      grunt.log.ok('Jadifying the output using ' + _opts.template);
+      _opts.template = _opts.template || path.normalize(__dirname + "/../default-template.jade");
+
+      if (!fs.existsSync(_opts.template)) return done(new Error(_opts.template + " does not exist!"));
+
+      grunt.log.ok('Jadifying the output using template ' + _opts.template);
 
       Object.keys(organizedByClass).forEach(function(classKey) {
         var thisClassDocs = organizedByClass[classKey];
@@ -158,7 +161,7 @@ module.exports = function(grunt) {
 
       done();
     });
-      
+
 
   });
 

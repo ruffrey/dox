@@ -5,15 +5,24 @@ A [jsdoc-ish](http://usejsdoc.org) documentation generator forked from [visionme
 ### Differences from visionmedia/dox
 
 * Allows multiline tag comments.
-* Supports code context on string key properties like `someobject['asdf']`.
-* Handles a few more tags.
-* Code context for `@event`.
-* Dumped the deprecated [github-flavored-markdown](https://github.com/isaacs/github-flavored-markdown) for [marked](https://github.com/chjj/marked).
-* Includes a **grunt plugin** `jsdoxy`. 
+* Supports code context on string key properties like `someobject['asdf-jkl']`.
+* Code context and parsing for more things:
+	* `@event`
+	* `@fires`
+	* `@auth`
+	* `@augments`
+* Uses a supported markdown parser ([marked](https://github.com/chjj/marked)) instead of the
+	old deprecated one.
+* Includes a **grunt plugin** `jsdoxy`.
 	* Comments are organized into a plain object with the `@class MyClass` tag as the key.
 	* Optionally renders the JSON output using [Jade](http://jade-lang.com).
 
 # Usage
+
+**_Note_**
+You must use the `@class` comment as your first comment per file. `@class myClass` is used
+to organize the output (this is different than the original Dox project. If you fail to do this,
+you will have no output.
 
 ## Globally
 
@@ -53,9 +62,11 @@ Install the package to your project with NPM
 	npm install jsdoxy --save-dev
 
 then in your source code, the `@class` tag should **always** be part of the first comment
-	
+
 	/**
 	 * A class that does something.
+	 *
+	 * Use it in this way.
 	 * @class MyClass
 	 * @param object opts Some parameters to get you started.
 	 */
@@ -70,19 +81,26 @@ then inside `Gruntfile.js` at the project root
     grunt.initConfig({
 		jsdoxy: {
             options: {
-            	jsonOutput: 'jsdoxy-output.json', // default, not optional
-            	outputPrivate: false, // default indicating whether to output private **classes**
-                template: 'your-template.jade' // optional, to allow generation of html
+				// JSON data representing your code. Not optional.
+            	jsonOutput: 'jsdoxy-output.json',
+
+				// A Jade template which will receive the locals below. Optional.
+				// Set to `false` to disable building this template. Other falsey values
+				// will use the default template.
+				template: 'your-template.jade',
+
+            	// Indicates whether to output things marked @private when building docs
+				outputPrivate: false
             },
             files: {
                 src: [ . . . ],
                 dest: '. . .'
             }
-        },
+        }
 	});
 
 yields `jsdoxy-output.json`
-	
+
 	{
 		"MyClass": {
 	        "tags": [
@@ -99,9 +117,12 @@ yields `jsdoxy-output.json`
 	                "description": "Some parameters to get you started."
 	            }
 	         ],
+			 "returns": "Object || String",
+			 "fires": [{ "type": "fires", "string": "some-event" }],
 	         "description": {
-	           "full": "A class that does something.",
-	           "summary": "A class that does something."
+	           "full": "<p>A class that does something.</p><p>Use it in this way.</p>",
+	           "summary": "<p>A class that does something.</p>",
+			   "body": "<p>Use it in this way.</p>"
 	        },
 	        "isPrivate": false,
 	        "ignore": false,
@@ -118,9 +139,14 @@ yields `jsdoxy-output.json`
 	    }
 	}
 
-### your Jade template
+### Jade template
 
-The jade template will receive the following locals
+There is a default template which will be used unless you pass the config option `template: false`.
+
+If you pass an empty string or do not include anything, it will render using the
+`default-template.jade` in this repository.
+
+The jade template will receive the following locals:
 
 	var jadeLocals = {
       structure:  organizedByClass,
@@ -131,5 +157,8 @@ The jade template will receive the following locals
 
 
 # License
+(c) 2014 - 2015 Jeff H. Parrish
+
+jeffhparrish@gmail.com
 
 MIT
