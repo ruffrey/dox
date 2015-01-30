@@ -39,14 +39,18 @@ html
           
             - var name = comment.ctx.name ? comment.ctx.name : comment.description.summary;
             - var id = name.replace(/[^a-z0-9]/gi,'-');
+            - var args = comment.tags.filter(function (t) { return t.type === 'param' || t.type === 'arg'; });
+            
             .comment(id=id)
               if (indx === 0)
                 != comment.description.summary
                 
               else
                 //- the title of the method or prop
+                - var typ = comment.type || comment.ctx.type;
                 h3
-                  code= comment.type || comment.ctx.type
+                  if (typ)
+                      code= typ
                   a.bold(href="#" + id)
                       if (comment.ctx.name)
                           = comment.ctx.name
@@ -54,9 +58,12 @@ html
                           != comment.description.summary
                 != comment.ctx.name ? comment.description.summary : ''
               
+              //- Description
+              div!= comment.description.body
+              
               
               if (comment.returns)
-                  p: strong returns
+                  p: strong returns&nbsp;
                       code= comment.returns || "undefined"
 
 
@@ -78,10 +85,8 @@ html
                     span.label.label-default= meth
                     | &nbsp;
 
-              div!= comment.description.body
 
               //- Arguments
-              - var args = comment.tags.filter(function (t) { return t.type === 'param' || t.type === 'arg'; });
               if (args.length)
                 br
                 h4 Arguments
@@ -94,17 +99,18 @@ html
                 each param in args
                   .row.param
                     .col-sm-4: code= param.name
-                    .col-sm-3: strong= param.types.join(", ")
-                    .col-sm-5= param.desc
+                    .col-sm-3: strong!= param.types.join(", ")
+                    .col-sm-5= param.string || param.description
                   br.visible-xs
               br
 
               //-
               //- Uncomment for devving!!!
               //-
-              a(href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'") JSON
-              pre(style="display:none")
-                code=JSON.stringify(comment, null, 4)
+            //-   a(href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'") JSON
+            //-   pre(style="display:none")
+            //-     code=JSON.stringify(comment, null, 4)
+            br
 
   br
   br
