@@ -94,7 +94,7 @@ html
                 each param in args
                   .row.param
                     .col-sm-4: code= param.name
-                    .col-sm-3: strong= param.type
+                    .col-sm-3: strong= param.types.join(", ")
                     .col-sm-5= param.desc
                   br.visible-xs
               br
