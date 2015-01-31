@@ -1,7 +1,7 @@
 {
   "name": "jsdoxy",
   "description": "jsdoc documentation generator",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "author": "Jeff Parrish",
   "license": "MIT",
   "repository": {
