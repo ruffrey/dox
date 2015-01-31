@@ -1,8 +1,9 @@
 {
   "name": "jsdoxy",
-  "description": "JSdoc documentation generator",
+  "description": "jsdoc documentation generator",
   "version": "0.8.2",
   "author": "Jeff Parrish",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/ruffrey/jsdoxy.git"
@@ -13,6 +14,7 @@
     "markdown",
     "jsdoc",
     "jade",
+    "dox",
     "gruntplugin"
   ],
   "bin": {
@@ -22,7 +24,7 @@
     "async": "^0.9.0",
     "commander": "0.6.1",
     "jade": "^1.3.1",
-    "marked": "^0.3.2",
+    "marked": "^0.3.3",
     "rimraf": "^2.2.8"
   }
 }

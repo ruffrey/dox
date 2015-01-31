@@ -63,6 +63,7 @@ Install the package to your project with NPM
 
 then in your source code, the `@class` tag should **always** be part of the first comment
 
+```javascript
 	/**
 	 * A class that does something.
 	 *
@@ -73,9 +74,11 @@ then in your source code, the `@class` tag should **always** be part of the firs
 	function MyClass (opts) {
 		. . .
 	}
+```
 
 then inside `Gruntfile.js` at the project root
 
+```javascript
     grunt.loadNpmTasks('jsdoxy');
 
     grunt.initConfig({
@@ -98,9 +101,11 @@ then inside `Gruntfile.js` at the project root
             }
         }
 	});
+```
 
 yields `jsdoxy-output.json`
 
+```json
 	{
 		"MyClass": {
 	        "tags": [
@@ -138,6 +143,7 @@ yields `jsdoxy-output.json`
 	        }
 	    }
 	}
+```
 
 ### Jade template
 
@@ -148,13 +154,19 @@ If you pass an empty string or do not include anything, it will render using the
 
 The jade template will receive the following locals:
 
+```javascript
 	var jadeLocals = {
       structure:  organizedByClass,
       comments:   thisClassDocs,
       className:  classKey,
-      link: classCommentLink
+      link: classCommentLink,
+	  files: allFileLinks
     };
+```
 
+### Markdown files
+Any markdown files with the extension `.md` will be turned into HTML files and rendered
+with the jade template.
 
 # License
 (c) 2014 - 2015 Jeff H. Parrish
