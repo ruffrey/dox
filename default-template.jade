@@ -8,109 +8,111 @@ html
     link(
         rel="stylesheet"
         type="text/css"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+        href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css"
     )
     link(
         rel="stylesheet"
         type="text/css"
         href="https://highlightjs.org/static/styles/github.css"
     )
-    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
-    script(src="https://highlightjs.org/static/highlight.pack.js")
-    script.
-      hljs.initHighlightingOnLoad();
-  body: .container
-    each file in files
-        span.help-inline: a(href=file)= file
-        | &nbsp;&nbsp;
-    hr
+    style(type="text/css").
+        .capitalize { text-transform: capitalize; }
     
-    if (mdContents)
-        != mdContents
-    else
-    
-      h3.help-block= subTitle
-      hr
-      h1= title
+  body: .container-fluid: .row
+    br
+    .col-sm-3
+        ul.nav.nav-pills.nav-stacked
+            li Documentation
+            each file in files.sort()
+                li: a.capitalize(href=file)= file.replace('.html', '').replace(/[^a-z0-9]/gi, ' ')
+        br
+        br
+    .col-sm-9
+        if (mdContents)
+            != mdContents
+        else
+        
+          h3.help-block= subTitle
+          hr
+          h1= title
 
-      each comment, indx in comments
-        if (!comment.ignore && !comment.isPrivate)
-          
-            - var name = comment.ctx.name ? comment.ctx.name : comment.description.summary;
-            - var id = name.replace(/[^a-z0-9]/gi,'-');
-            - var args = comment.tags.filter(function (t) { return t.type === 'param' || t.type === 'arg'; });
-            
-            .comment(id=id)
-              if (indx === 0)
-                != comment.description.summary
+          each comment, indx in comments
+            if (!comment.ignore && !comment.isPrivate)
+              
+                - var name = comment.ctx.name ? comment.ctx.name : comment.description.summary;
+                - var id = name.replace(/[^a-z0-9]/gi,'-');
+                - var args = comment.tags.filter(function (t) { return t.type === 'param' || t.type === 'arg'; });
                 
-              else
-                //- the title of the method or prop
-                - var typ = comment.type || comment.ctx.type;
-                h3
-                  if (typ)
-                      code= typ
-                  a.bold(href="#" + id)
-                      if (comment.ctx.name)
-                          = comment.ctx.name
-                      else 
-                          != comment.description.summary
-                != comment.ctx.name ? comment.description.summary : ''
-              
-              //- Description
-              div!= comment.description.body
-              
-              
-              if (comment.returns)
-                  p: strong returns&nbsp;
-                      code= comment.returns || "undefined"
+                .comment(id=id)
+                  if (indx === 0)
+                    != comment.description.summary
+                    
+                  else
+                    //- the title of the method or prop
+                    - var typ = comment.type || comment.ctx.type;
+                    h3
+                      if (typ)
+                          code= typ
+                      a.bold(href="#" + id)
+                          if (comment.ctx.name)
+                              = comment.ctx.name
+                          else 
+                              != comment.description.summary
+                    != comment.ctx.name ? comment.description.summary : ''
+                  
+                  //- Description
+                  div!= comment.description.body
+                  
+                  
+                  if (comment.returns)
+                      p: strong returns&nbsp;
+                          code= comment.returns || "undefined"
 
 
-              //- info about the method or prop
-              if (comment.augments)
-                p: strong extends&nbsp;
-                    code= comment.augments
+                  //- info about the method or prop
+                  if (comment.augments)
+                    p: strong extends&nbsp;
+                        code= comment.augments
 
-              if (comment.fires && comment.fires.length)
-                p
-                  strong fires
-                  code= comment.fires.map(function(f){ return f.replace(className + '#','') }).join('|')
+                  if (comment.fires && comment.fires.length)
+                    p
+                      strong fires
+                      code= comment.fires.map(function(f){ return f.replace(className + '#','') }).join('|')
 
-              if (comment.auth)
-                p
-                  strong Authorization
-                  | &nbsp;&nbsp;
-                  each meth in comment.auth
-                    span.label.label-default= meth
-                    | &nbsp;
+                  if (comment.auth)
+                    p
+                      strong Authorization
+                      | &nbsp;&nbsp;
+                      each meth in comment.auth
+                        span.label.label-default= meth
+                        | &nbsp;
 
 
-              //- Arguments
-              if (args.length)
+                  //- Arguments
+                  if (args.length)
+                    br
+                    h4 Arguments
+
+                    .row.hidden-xs.param
+                      .col-sm-4 Name
+                      .col-sm-3 Type
+                      .col-sm-5
+
+                    each param in args
+                      .row.param
+                        .col-sm-4: code= param.name
+                        .col-sm-3: strong!= param.types.join(", ")
+                        .col-sm-5= param.string || param.description
+                      br.visible-xs
+                  br
+
+                  //-
+                  //- Uncomment for devving!!!
+                  //-
+                //-   a(href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'") JSON
+                //-   pre(style="display:none")
+                //-     code=JSON.stringify(comment, null, 4)
                 br
-                h4 Arguments
-
-                .row.hidden-xs.param
-                  .col-sm-4 Name
-                  .col-sm-3 Type
-                  .col-sm-5
-
-                each param in args
-                  .row.param
-                    .col-sm-4: code= param.name
-                    .col-sm-3: strong!= param.types.join(", ")
-                    .col-sm-5= param.string || param.description
-                  br.visible-xs
-              br
-
-              //-
-              //- Uncomment for devving!!!
-              //-
-            //-   a(href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'") JSON
-            //-   pre(style="display:none")
-            //-     code=JSON.stringify(comment, null, 4)
-            br
 
   br
   br
@@ -119,3 +121,10 @@ html
   br
   br
   br
+
+  script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+  script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+  script(src="https://highlightjs.org/static/highlight.pack.js")
+  script.
+    hljs.initHighlightingOnLoad();
+
