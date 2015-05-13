@@ -164,13 +164,20 @@ The jade template will receive the following locals:
     };
 ```
 
+#### Default template
+
+![default jade jsdoxy template](https://i.imgur.com/4vMyjsZ.png)
+
 ### Markdown files
 Any markdown files with the extension `.md` will be turned into HTML files and rendered
 with the jade template.
 
 # License
+
 (c) 2014 - 2015 Jeff H. Parrish
 
 jeffhparrish@gmail.com
 
 MIT
+
+Forked from [tj/dox](https://github.com/tj/dox)
