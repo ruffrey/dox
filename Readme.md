@@ -91,6 +91,9 @@ then inside `Gruntfile.js` at the project root
 				// Set to `false` to disable building this template. Other falsey values
 				// will use the default template.
 				template: 'your-template.jade',
+				// when using a template, what is the base path for all of the links
+				// to work from?
+				basePath: '', // '/docs'
 
             	// Indicates whether to output things marked @private when building docs
 				outputPrivate: false
@@ -160,7 +163,9 @@ The jade template will receive the following locals:
       comments:   thisClassDocs,
       className:  classKey,
       link: classCommentLink,
-	  files: allFileLinks
+	  files: allFileLinks,
+	  basePath: basePath,
+	  filenameOut: filenameOut
     };
 ```
 

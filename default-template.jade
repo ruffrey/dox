@@ -1,10 +1,33 @@
 - var subTitle = comments ? comments[0].ctx.file.input : '';
 - var title = className || 'Docs';
 
+mixin navList(files)
+    - files.sort();
+    - var displayName = '';
+    - var thisPrefix = '';
+    - var lastPrefix = '';
+    - var thisPage = '';
+    each file in files
+        if (file !== 'index.html')
+            - displayName = file.replace(/\//g, ' / ').replace(/[-_]/g, ' ').replace('.html', '').replace(/([A-Z])/g, ' $1');
+            - parts = displayName.split('/');
+            - thisPage = parts.pop();
+            - thisPrefix = parts.join(' / ');
+            if (thisPrefix !== lastPrefix)
+                li= thisPrefix
+            if (filenameOut === file)
+                li(class="active"): a(href=file)= thisPage
+            else
+                li: a(href=file)= thisPage
+            
+            - lastPrefix = thisPrefix + '';
+    
+
 doctype html
 html
   head
-    title=title + ' - ' + subTitle
+    title=title + ' | ' + subTitle
+    base(href=basePath)
     link(
         rel="stylesheet"
         type="text/css"
@@ -21,10 +44,13 @@ html
   body: .container-fluid: .row
     br
     .col-sm-3
-        ul.nav.nav-pills.nav-stacked
-            li Documentation
-            each file in files.sort()
-                li: a.capitalize(href=file)= file.replace('.html', '').replace(/[^a-z0-9]/gi, ' ')
+        #menu.capitalize
+            ul.nav.nav-stacked.nav-pills
+                li(onclick="window.open('#{basePath}', '_self')" style="cursor:pointer")
+                    strong Documentation
+                li &nbsp;
+                +navList(files)
+            
         br
         br
     .col-sm-9
@@ -53,6 +79,7 @@ html
                     h3
                       if (typ)
                           code= typ
+                          | &nbsp;
                       a.bold(href="#" + id)
                           if (comment.ctx.name)
                               = comment.ctx.name
@@ -121,10 +148,8 @@ html
   br
   br
   br
-
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
   script(src="https://highlightjs.org/static/highlight.pack.js")
   script.
     hljs.initHighlightingOnLoad();
-
