@@ -110,19 +110,43 @@ module.exports = function(grunt) {
 
 
             // comments.forEach, really
-            output.forEach(function(comment) {
-
+            output.forEach(function (comment) {
+                var thisCommentGoesSomewhereElse = null;
+                
+                function moveComment() {
+                    grunt.log.ok(
+                        'Moving "event" comment from',
+                        lastClassnameWas, 'to',
+                        comment.ctx.name
+                    );
+                    if (!organizedByClass[thisCommentGoesSomewhereElse]) {
+                        organizedByClass[thisCommentGoesSomewhereElse] = [];    
+                    }
+                    organizedByClass[thisCommentGoesSomewhereElse].push(comment);
+                    return;
+                }
+                
                 //
                 // Important:
                 // the `@class SomeClass` comment should always be in the first comment.
                 //
 
-
-                // organize the comments by @class
-
-                comment.tags.forEach(function(tag) {
-
-                    if (tag.type == "class") {
+                //
+                // Organize the comments by @class.
+                // 
+                // Unless it's an event that is documented on a different class.
+                // Then move it to the right class.
+                
+                if (comment.ctx.type && comment.ctx.name) {
+                    if (comment.ctx.type === 'event' && !~comment.ctx.name.indexOf(lastClassnameWas) ) {
+                        thisCommentGoesSomewhereElse = comment.ctx.name.split('#')[0];
+                        moveComment();
+                    }
+                }
+                comment.tags.forEach(function (tag) {
+                    
+                    // Start a new class here
+                    if (tag.type === 'class') {
                         if (comment.isPrivate && !_opts.outputPrivate) {
                             // do not include the private comments unless specified
                         } else {
@@ -131,9 +155,11 @@ module.exports = function(grunt) {
                             comment.ctx.name = lastClassnameWas;
                         }
                     }
-
+                    if (tag.type === 'event' && tag.string && !~tag.string.indexOf(lastClassnameWas) ) {
+                        thisCommentGoesSomewhereElse = tag.string.split('#')[0];
+                    }
                 });
-
+                if (thisCommentGoesSomewhereElse) return moveComment();
                 if (!lastClassnameWas) return;
 
                 organizedByClass[lastClassnameWas].push(comment);
