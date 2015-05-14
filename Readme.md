@@ -96,7 +96,11 @@ then inside `Gruntfile.js` at the project root
 				basePath: '', // '/docs'
 
             	// Indicates whether to output things marked @private when building docs
-				outputPrivate: false
+				outputPrivate: false,
+				// make an index landing page
+				generateIndex: false,
+				// flatten the outputted files into one directory
+				flatten: false
             },
             files: {
                 src: [ . . . ],

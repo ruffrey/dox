@@ -49,7 +49,9 @@ module.exports = function(grunt) {
                 var isMarkdown = path.extname(file) === '.md';
                 if (isMarkdown) {
                     markdownFiles.push(file);
-                    var filenameOut = file.replace('.md', '.html');
+                    var filenameOut = _opts.flatten
+                        ? path.basename(file, '.md') + '.html'
+                        : file.replace('.md', '.html');
                     allFileLinks.push(filenameOut);
                     cb();
                     return;
@@ -152,7 +154,9 @@ module.exports = function(grunt) {
 
             // first get the file list for code comments
             Object.keys(organizedByClass).forEach(function(classKey) {
-                var filenameOut = organizedByClass[classKey][0].ctx.file.input.replace('.js', '.html');
+                var filenameOut = _opts.flatten
+                    ? classKey + ".html"
+                    : organizedByClass[classKey][0].ctx.file.input.replace('.js', '.html');
                 allFileLinks.push(filenameOut);
             });
 
@@ -171,7 +175,9 @@ module.exports = function(grunt) {
                     if (classCommentLink) return false;
                 });
 
-                var filenameOut = organizedByClass[classKey][0].ctx.file.input.replace('.js', '.html');
+                var filenameOut = _opts.flatten
+                    ? classKey + ".html"
+                    : organizedByClass[classKey][0].ctx.file.input.replace('.js', '.html');
                 var jadeLocals = {
                     structure: organizedByClass,
                     comments: thisClassDocs,
@@ -181,9 +187,16 @@ module.exports = function(grunt) {
                     basePath: _opts.basePath,
                     filenameOut: filenameOut
                 };
-
-                var html = jade.renderFile(_opts.template, jadeLocals);
+                grunt.log.ok('Rendering docs page', filenameOut, 'with template', _opts.template, thisClassDocs.length, 'comments');
+                var html;
+                try {
+                    html = jade.renderFile(_opts.template, jadeLocals);
+                } catch (ex) {
+                    grunt.log.error('!! Failed rendering', filenameOut, ex);
+                    return;
+                }
                 grunt.file.write(path.join(dest, filenameOut), html);
+                grunt.log.ok('Successfully rendered docs page', filenameOut);
 
             });
             
@@ -195,9 +208,12 @@ module.exports = function(grunt) {
                 var mdContents = markdown(fs.readFileSync(file, {
                     encoding: 'utf8'
                 }));
+                grunt.log.ok('Rendering markdown page ' + filenameOut, 'with template', _opts.template);
 
                 var html = jade.renderFile(_opts.template, {
+                    structure: organizedByClass,
                     mdContents: mdContents,
+                    comments: [],
                     className: file,
                     files: allFileLinks,
                     basePath: _opts.basePath,
@@ -207,9 +223,12 @@ module.exports = function(grunt) {
             });
 
             // write a little contents page if there is not one yet
-            if (allFileLinks.indexOf('index.html') === -1) {
+            if (_opts.generateIndex && allFileLinks.indexOf('index.html') === -1) {
+                grunt.log.ok('Generating index page.');
                 var html = jade.renderFile(_opts.template, {
                     mdContents: '<h1>Documentation</h1>',
+                    comments: [],
+                    structure: organizedByClass,
                     className: 'Index',
                     files: allFileLinks,
                     basePath: _opts.basePath,
