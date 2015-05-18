@@ -1,6 +1,6 @@
 - var getDisplayName = function (file) { return file.replace(/\//g, ' / ').replace(/[-_]/g, ' ').replace('.html', '').replace(/([A-Z])/g, ' $1'); };
-- var subTitle = comments.length ? ' - ' + comments[0].ctx.file.input : '';
-- var title = filenameOut ? getDisplayName(filenameOut) : className || 'Documentation';
+- var subTitle = comments.length ? comments[0].ctx.file.input : '';
+- var title = mdContents ? getDisplayName(filenameOut) : className || 'Documentation';
 
 mixin navList(files)
     - files.sort();
@@ -27,7 +27,7 @@ mixin navList(files)
 doctype html
 html
   head
-    title=title + subTitle
+    title=title + (subTitle ? ' - ' + subtitle : '')
     base(href=basePath)
     link(
         rel="stylesheet"
