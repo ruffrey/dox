@@ -183,6 +183,16 @@ The jade template will receive the following locals:
 Any markdown files with the extension `.md` will be turned into HTML files and rendered
 with the jade template.
 
+#### Overriding the default template CSS classes
+
+The following CSS classes are exposed:
+
+* `.docs`
+* `.docs--sidebar`
+* `.docs--main`
+* `.docs--subtitle`
+* `.docs--title`
+
 # License
 
 (c) 2014 - 2015 Jeff H. Parrish

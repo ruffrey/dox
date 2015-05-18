@@ -61,9 +61,9 @@ html
             != mdContents
         else
         
-          h3.help-block= subTitle
+          h3.help-block.docs--subtitle= subTitle
           hr
-          h1= title
+          h1.docs--title= title
           br
           each comment, indx in comments
             if (!comment.ignore && !comment.isPrivate)
