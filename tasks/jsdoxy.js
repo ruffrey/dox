@@ -25,6 +25,8 @@ module.exports = function(grunt) {
         _opts.template = _opts.template || path.normalize(__dirname + "/../default-template.jade");
         var _args = [];
         var outputFile = _opts.jsonOutput || "jsdoxy-output.json";
+        var stylesheet = _opts.stylesheet
+            || "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css";
 
         // Absolute path to jsdoxy
         var jsdoxy = [doxPath, 'bin', 'jsdoxy'].join(path.sep);
@@ -211,7 +213,8 @@ module.exports = function(grunt) {
                     link: classCommentLink,
                     files: allFileLinks,
                     basePath: _opts.basePath,
-                    filenameOut: filenameOut
+                    filenameOut: filenameOut,
+                    stylesheet: stylesheet
                 };
                 grunt.log.ok('Rendering docs page', filenameOut, 'with template', _opts.template, thisClassDocs.length, 'comments');
                 var html;
@@ -243,7 +246,8 @@ module.exports = function(grunt) {
                     className: file,
                     files: allFileLinks,
                     basePath: _opts.basePath,
-                    filenameOut: filenameOut
+                    filenameOut: filenameOut,
+                    stylesheet: stylesheet
                 });
                 grunt.file.write(outpath, html);
             });
@@ -258,7 +262,8 @@ module.exports = function(grunt) {
                     className: 'Index',
                     files: allFileLinks,
                     basePath: _opts.basePath,
-                    filenameOut: 'index.html'
+                    filenameOut: 'index.html',
+                    stylesheet: stylesheet
                 });
                 grunt.file.write(path.join(dest, 'index.html'), html);
             }

@@ -1,5 +1,6 @@
-- var subTitle = comments.length ? comments[0].ctx.file.input : '';
-- var title = className || 'Docs';
+- var getDisplayName = function (file) { return file.replace(/\//g, ' / ').replace(/[-_]/g, ' ').replace('.html', '').replace(/([A-Z])/g, ' $1'); };
+- var subTitle = comments.length ? ' - ' + comments[0].ctx.file.input : '';
+- var title = filenameOut ? getDisplayName(filenameOut) : className || 'Documentation';
 
 mixin navList(files)
     - files.sort();
@@ -9,7 +10,7 @@ mixin navList(files)
     - var thisPage = '';
     each file in files
         if (file !== 'index.html')
-            - displayName = file.replace(/\//g, ' / ').replace(/[-_]/g, ' ').replace('.html', '').replace(/([A-Z])/g, ' $1');
+            - displayName = getDisplayName(file);
             - parts = displayName.split('/');
             - thisPage = parts.pop();
             - thisPrefix = parts.join(' / ');
@@ -26,12 +27,12 @@ mixin navList(files)
 doctype html
 html
   head
-    title=title + ' | ' + subTitle
+    title=title + subTitle
     base(href=basePath)
     link(
         rel="stylesheet"
         type="text/css"
-        href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css"
+        href=stylesheet
     )
     link(
         rel="stylesheet"
@@ -41,9 +42,10 @@ html
     style(type="text/css").
         .capitalize { text-transform: capitalize; }
     
-  body: .container-fluid: .row
-    br
-    .col-sm-3
+  body.docs: .container-fluid: .row
+    
+    .col-sm-3.docs--sidebar
+        br
         #menu.capitalize
             ul.nav.nav-stacked.nav-pills
                 li(onclick="window.open('#{basePath}', '_self')" style="cursor:pointer")
@@ -53,7 +55,8 @@ html
             
         br
         br
-    .col-sm-9
+    .col-sm-9.docs--main
+        br
         if (mdContents)
             != mdContents
         else
@@ -61,9 +64,10 @@ html
           h3.help-block= subTitle
           hr
           h1= title
-
+          br
           each comment, indx in comments
             if (!comment.ignore && !comment.isPrivate)
+              .well
               
                 - var name = comment.ctx.name ? comment.ctx.name : comment.description.summary;
                 - var id = name.replace(/[^a-z0-9]/gi,'-');
@@ -124,14 +128,13 @@ html
                       .col-sm-4 Name
                       .col-sm-3 Type
                       .col-sm-5
-
+                    hr
                     each param in args
                       .row.param
                         .col-sm-4: code= param.name
                         .col-sm-3: strong!= param.types.join(", ")
                         .col-sm-5= param.string || param.description
-                      br.visible-xs
-                  br
+                      hr
 
                   //-
                   //- Uncomment for devving!!!
@@ -139,7 +142,7 @@ html
                 //-   a(href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'") JSON
                 //-   pre(style="display:none")
                 //-     code=JSON.stringify(comment, null, 4)
-                br
+              br
 
   br
   br

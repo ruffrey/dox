@@ -100,7 +100,9 @@ then inside `Gruntfile.js` at the project root
 				// make an index landing page
 				generateIndex: false,
 				// flatten the outputted files into one directory
-				flatten: false
+				flatten: false,
+				// path to a custom stylesheet
+				stylesheet: "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css"
             },
             files: {
                 src: [ . . . ],
