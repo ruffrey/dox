@@ -31,6 +31,12 @@ module.exports = function(grunt) {
         // Absolute path to jsdoxy
         var jsdoxy = [doxPath, 'bin', 'jsdoxy'].join(path.sep);
 
+
+        // add flags
+        if (_opts.skipSingleStar) {
+            jsdoxy += " --skipSingleStar";
+        }
+
         // Cleanup any existing docs
         rimraf.sync(dest);
 
